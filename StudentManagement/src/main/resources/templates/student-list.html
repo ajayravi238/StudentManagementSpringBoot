@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #f4f6f8;
+            --text-light: #2c3e50;
+            --bg-dark: #1e1e2f;
+            --text-dark: #f5f6fa;
+            --glass-light: rgba(255, 255, 255, 0.25);
+            --glass-dark: rgba(30, 30, 47, 0.5);
+            --button-light: linear-gradient(to right, #6a11cb, #2575fc);
+            --button-dark: linear-gradient(to right, #ff416c, #ff4b2b);
+        }
+
+        body {
+            margin: 0;
+            padding: 60px 20px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+            animation: moveBg 15s infinite alternate;
+            transition: all 0.4s ease;
+            color: var(--text-light);
+        }
+
+        @keyframes moveBg {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: var(--text-dark);
+        }
+
+        .toggle-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            background-color: #ccc;
+            border-radius: 24px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .table-container {
+            max-width: 1000px;
+            margin: auto;
+            background: var(--glass-light);
+            backdrop-filter: blur(12px);
+            border-radius: 15px;
+            overflow-x: auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.4s ease;
+        }
+
+        body.dark-mode .table-container {
+            background: var(--glass-dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 14px 20px;
+            text-align: left;
+            font-size: 16px;
+        }
+
+        thead {
+            background-color: #2c3e50;
+            color: white;
+        }
+
+        body.dark-mode thead {
+            background-color: #111827;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode tbody tr:nth-child(even) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        body.dark-mode tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--button-light);
+            border-radius: 10px;
+            text-decoration: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        body.dark-mode .icon-btn {
+            background: var(--button-dark);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-links">
+        <a href="/" class="icon-btn" aria-label="Home">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        </a>
+    </div>
+
+    <div class="toggle-wrapper">
+        <label>🌞</label>
+        <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider round"></span>
+        </label>
+        <label>🌙</label>
+    </div>
+
+    <h1>Student List</h1>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student : ${students}">
+                    <td th:text="${student.id}">1</td>
+                    <td th:text="${student.name}">John Doe</td>
+                    <td th:text="${student.dept}">CSE</td>
+                    <td th:text="${student.mail}">john@example.com</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        toggle.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                toggle.checked = true;
+            }
+        });
+    </script>
+
+</body>
+</html>

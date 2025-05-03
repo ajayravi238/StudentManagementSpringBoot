@@ -2,6 +2,8 @@ package com.example.learn.studentManagement;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 
 @SpringBootApplication
 public class StudentManagementApplication {
@@ -14,5 +16,9 @@ public class StudentManagementApplication {
         SpringApplication.run(StudentManagementApplication.class, args);
         System.out.println("Application Started Successfully!");
 	}
-
+	
+	@Bean
+    public HiddenHttpMethodFilter hiddenHttpMethodFilter() {
+        return new HiddenHttpMethodFilter();
+    }
 }

@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Fetch Student for Edit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-light: #ffffff;
+            --secondary-light: #f0f4f8;
+            --text-light: #2d3436;
+            --glass-bg-light: rgba(255, 255, 255, 0.3);
+            --button-light: linear-gradient(to right, #6a11cb, #2575fc);
+
+            --primary-dark: #1e1e2f;
+            --secondary-dark: #2b2b3d;
+            --text-dark: #f5f6fa;
+            --glass-bg-dark: rgba(30, 30, 47, 0.5);
+            --button-dark: linear-gradient(to right, #ff416c, #ff4b2b);
+        }
+
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e0c3fc, #8ec5fc);
+            background-size: 200% 200%;
+            animation: moveBg 15s infinite alternate;
+            transition: all 0.4s ease;
+        }
+
+        @keyframes moveBg {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        }
+
+        .toggle-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 20px;
+            left: 30px;
+        }
+
+        .icon-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--button-light);
+            border-radius: 10px;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .icon-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .icon-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-mode .icon-btn {
+            background: var(--button-dark);
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            background-color: #ccc;
+            border-radius: 24px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: 0.4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.4s;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 80px auto 20px;
+            background: var(--glass-bg-light);
+            padding: 40px;
+            border-radius: 15px;
+            backdrop-filter: blur(18px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            color: var(--text-light);
+            transition: all 0.4s ease;
+        }
+
+        body.dark-mode .form-container {
+            background: var(--glass-bg-dark);
+            color: var(--text-dark);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: inherit;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: white;
+            background: var(--button-light);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        body.dark-mode button[type="submit"] {
+            background: var(--button-dark);
+        }
+
+        button[type="submit"]:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .slider.round {
+            border-radius: 24px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .error {
+            text-align: center;
+            color: red;
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="nav-links">
+        <a href="/" class="icon-btn" aria-label="Home">
+            <svg viewBox="0 0 24 24">
+                <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+        </a>
+    </div>
+
+    <div class="toggle-wrapper">
+        <label>🌞</label>
+        <label class="switch">
+            <input type="checkbox" id="themeToggle" aria-label="Toggle theme">
+            <span class="slider round"></span>
+        </label>
+        <label>🌙</label>
+    </div>
+
+    <div class="form-container">
+        <h2>Enter Student ID to Edit</h2>
+        <form th:action="@{/Student/edit}" method="post">
+            <label for="id">Student ID:</label>
+            <input type="number" id="id" name="id" placeholder="Enter ID" required />
+            <button type="submit">Fetch Student</button>
+        </form>
+        <p class="error" th:if="${error}" th:text="${error}"></p>
+    </div>
+
+    <script>
+        const toggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        toggle.addEventListener('change', () => {
+            body.classList.toggle('dark-mode');
+            localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+        });
+
+        window.addEventListener('load', () => {
+            if (localStorage.getItem('theme') === 'dark') {
+                body.classList.add('dark-mode');
+                toggle.checked = true;
+            }
+        });
+    </script>
+
+</body>
+</html>
